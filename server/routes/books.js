@@ -11,6 +11,6 @@ export const router = Router();
 
 router.get('/', getAllBooks);
 router.post('/', addNewBook);
-router.get('/:slug', getBook);
-router.put('/:slug', updateBook);
+router.get('/:id', getBook);
+router.put('/:id', updateBook);
 router.delete('/:id', deleteBook);

@@ -27,10 +27,28 @@ export const getAllBooks = async (req, res) => {
 */
 export const getBook = async (req, res) => {
   try {
-    const { slug } = req.params;
+    const { id } = req.params;
     const book = await prisma.book.findUnique({
       where: {
-        slug,
+        id,
+      },
+      select: {
+        author: true,
+        category: true,
+        cover: true,
+        desc: true,
+        id: true,
+        price: true,
+        slug: true,
+        title: true,
+        categoryId: true,
+        createdAt: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
       },
     });
     res.status(200).json({
@@ -49,19 +67,14 @@ export const getBook = async (req, res) => {
 */
 export const addNewBook = async (req, res) => {
   try {
-    const { title, desc, cover, author, price, categoryId } = req.body;
-
-    if (!title || !desc || !cover || !author || !price || !categoryId) {
+    const { title, desc, author, price, categoryId } = req.body;
+    if (!title || !desc || !author || !price || !categoryId) {
       return res.status(404).json({ message: 'Please, fill in all fields' });
     }
     const book = await prisma.book.create({
       data: {
-        title,
-        desc,
-        cover,
-        author,
+        ...req.body,
         price: +price,
-        categoryId,
         slug: slugify(title, { lower: true, strict: true }),
       },
     });
@@ -103,16 +116,14 @@ export const deleteBook = async (req, res) => {
 */
 export const updateBook = async (req, res) => {
   try {
-    const { slug } = req.params;
+    const { id } = req.params;
     const updatedBook = await prisma.book.update({
       where: {
-        slug,
+        id,
       },
       data: {
         ...req.body,
-        slug: req.body.title
-          ? slugify(req.body.title, { lower: true, strict: true })
-          : slug,
+        slug: slugify(req.body.title, { lower: true, strict: true }),
       },
     });
 

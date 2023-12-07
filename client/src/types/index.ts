@@ -6,8 +6,14 @@ export interface IBook {
   cover: string;
   author: string;
   price: number;
-  category?: string;
   categoryId?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt: string;
+  updatedAt?: string;
+  category?: { id: string; name: string };
+}
+
+export interface ICategory {
+  id: string;
+  name: string;
+  books: IBook[];
 }
